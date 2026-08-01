@@ -367,6 +367,77 @@ document.addEventListener('DOMContentLoaded', () => {
     [projectName, metaName, metaAuthor, codeEditor].forEach(el => {
         if (el) el.addEventListener('input', saveState);
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+    // 1. Управление модальным окном профиля (Штаб ЛМСХ)
+    const profileBtn = document.getElementById('btn-profile-menu');
+    const profileModal = document.getElementById('profileModal');
+    const closeProfileBtn = document.getElementById('btn-close-profile');
+
+    if (profileBtn && profileModal) {
+        profileBtn.addEventListener('click', () => {
+            profileModal.style.display = 'flex';
+        });
+    }
+
+    if (closeProfileBtn && profileModal) {
+        closeProfileBtn.addEventListener('click', () => {
+            profileModal.style.display = 'none';
+        });
+    }
+
+    // 2. Логика переключения проектов в селекторе
+    const projectSwitcher = document.getElementById('project-switcher');
+    const projectNameInput = document.getElementById('project-name');
+
+    if (projectSwitcher && projectNameInput) {
+        projectSwitcher.addEventListener('change', (e) => {
+            const selectedText = e.target.options[e.target.selectedIndex].text;
+            projectNameInput.value = e.target.value;
+            console.لlog(`Переключено на проект: ${selectedText}`);
+            // Здесь можно добавить загрузку данных выбранного проекта из репозитория
+        });
+    }
+
+    // 3. Динамическая кнопка в поле ввода: Live Chat (если пусто) / Отправить (если есть текст)
+    const oracleInput = document.getElementById('oracle-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    if (oracleInput && sendBtn) {
+        oracleInput.addEventListener('input', function() {
+            // Автоматическое изменение высоты без скачков
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+
+            const iconSpan = sendBtn.querySelector('.material-symbols-rounded');
+            
+            if (this.value.trim().length > 0) {
+                // Есть текст -> превращаем в кнопку отправки
+                sendBtn.title = "Отправить";
+                if (iconSpan) iconSpan.textContent = "send";
+                sendBtn.classList.add('active-send');
+            } else {
+                // Пусто -> превращаем в Live Chat
+                sendBtn.title = "Live Chat";
+                if (iconSpan) iconSpan.textContent = "graphic_eq"; // Иконка аудиоволн для Live
+                sendBtn.classList.remove('active-send');
+            }
+        });
+
+        // Клик по динамической кнопке
+        sendBtn.addEventListener('click', () => {
+            if (oracleInput.value.trim().length > 0) {
+                console.log("Отправка сообщения:", oracleInput.value);
+                oracleInput.value = '';
+                oracleInput.style.height = 'auto';
+                sendBtn.querySelector('.material-symbols-rounded').textContent = "graphic_eq";
+            } else {
+                console.log("Запуск Live Chat...");
+                // Логика запуска голосового Live-общения
+            }
+        });
+    }
+});
     if (notesEditor) notesEditor.addEventListener('input', saveState);
 
     // Первичная загрузка
