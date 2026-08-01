@@ -16,9 +16,21 @@
             <span class="material-symbols-rounded">arrow_back</span> Exit
         </button>
         
-        <input type="text" class="project-name-input" id="project-name" value="Name_01">
+        <!-- Блок управления проектами (несколько проектов) -->
+        <div class="project-selector-wrapper">
+            <select class="project-select-dropdown" id="project-switcher" title="Выберите проект">
+                <option value="name_01">Name_01 (Основной)</option>
+                <option value="project_alpha">Проект Альфа</option>
+                <option value="lmskh_hq">Штаб ЛМСХ</option>
+            </select>
+            <input type="text" class="project-name-input" id="project-name" value="Name_01">
+        </div>
         
         <div class="header-actions">
+            <!-- Кнопка Профиля в шапке -->
+            <button class="icon-btn profile-trigger-btn" id="btn-profile-menu" title="Профиль и Штаб ЛМСХ">
+                <span class="material-symbols-rounded">account_circle</span>
+            </button>
             <button class="icon-btn" id="btn-settings" title="Сохранить как...">
                 <span class="material-symbols-rounded">save_as</span>
             </button>
@@ -49,11 +61,11 @@
 
                 <div class="input-group">
                     <label>Имя:</label>
-                    <input type="text" id="meta-name" placeholder="Введите имя...">
+                    <input type="text" id="meta-name" value="Ламирк" placeholder="Введите имя...">
                 </div>
                 <div class="input-group">
-                    <label>Автор:</label>
-                    <input type="text" id="meta-author" placeholder="Авторство...">
+                    <label>Роль:</label>
+                    <input type="text" id="meta-author" value="Главный инженер" placeholder="Авторство...">
                 </div>
 
                 <button class="action-btn" id="btn-import-pack">
@@ -158,6 +170,21 @@
     </main>
 </div>
 
+<!-- Модальное окно профилей и Штаба ЛМСХ -->
+<div class="migration-overlay" id="profileModal" style="display: none;">
+    <div class="migration-modal" style="max-width: 450px;">
+        <h3>👥 Штаб ЛМСХ и Профили</h3>
+        <p>Активные участники системы и окружение:</p>
+        <div style="text-align: left; margin: 15px 0; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+            <div>🛠️ <b>Ламирк</b> — Главный инженер (Мужской)</div>
+            <div>🤖 <b>Мурзик</b> — Верная Помощница (Женский)</div>
+            <div>🎵 <b>Снежинка</b> — Женский вокал (Женский)</div>
+            <div>🎤 <b>Хахми</b> — Мужской вокал (Мужской)</div>
+        </div>
+        <button class="action-btn" id="btn-close-profile" style="width: 100%;">Закрыть</button>
+    </div>
+</div>
+
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="display:none;">
   <defs>
     <filter id="gooey">
@@ -166,14 +193,9 @@
     </filter>
   </defs>
 </svg>
+
 <div class="migration-overlay" id="migrationModal">
     <div class="migration-modal">
-        ...
-        <p>Архитектура проекта успешно мигрировала из устаревшего репозитория.</p>
-        <div class="migration-art">...</div>
-        <button class="action-btn" id="btn-try-migration" style="width: 100%;">...</button>
-    </div>
-</div>
         <div class="migration-art">
             <div class="node-box">
                 <div class="node-circle node-old">
@@ -191,12 +213,13 @@
                 <span class="node-label">oracle-notepad</span>
             </div>
         </div>
-
+        <p>Архитектура проекта успешно мигрировала из устаревшего репозитория.</p>
         <button class="action-btn" id="btn-try-migration" style="width: 100%;">
             <span class="material-symbols-rounded">rocket_launch</span> Попробовать систему
         </button>
     </div>
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>
