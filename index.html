@@ -11,92 +11,102 @@
 <body class="dark-theme">
 
 <div class="workspace-container">
+    <!-- HEADER -->
     <header class="top-bar">
-        <button class="icon-btn" id="btn-exit" title="Выход">
-            <span class="material-symbols-rounded">arrow_back</span> Exit
-        </button>
-        
-        <!-- Блок управления проектами (несколько проектов) -->
         <div class="project-selector-wrapper">
-            <select class="project-select-dropdown" id="project-switcher" title="Выберите проект">
-                <option value="name_01">Name_01 (Основной)</option>
-                <option value="project_alpha">Проект Альфа</option>
-                <option value="lmskh_hq">Штаб ЛМСХ</option>
-            </select>
-            <input type="text" class="project-name-input" id="project-name" value="Name_01">
+            <button class="icon-btn project-modal-trigger-btn" id="btn-open-projects" title="Управление проектами">
+                <span class="material-symbols-rounded">folder_open</span>
+                <span id="current-project-name-display">Name_01</span>
+            </button>
         </div>
         
         <div class="header-actions">
-            <!-- Кнопка Профиля в шапке -->
-            <button class="icon-btn profile-trigger-btn" id="btn-profile-menu" title="Профиль и Штаб ЛМСХ">
-                <span class="material-symbols-rounded">account_circle</span>
-            </button>
-            <button class="icon-btn" id="btn-settings" title="Сохранить как...">
+            <button class="icon-btn" id="btn-settings" title="Сохранить как / Автосохранение">
                 <span class="material-symbols-rounded">save_as</span>
             </button>
             <div class="dropdown-menu" id="export-menu">
-                <div class="dropdown-header">Сохранить как...</div>
-                <button class="dropdown-item" onclick="exportData('worldpack')">Core Node .worldpack</button>
-                <button class="dropdown-item" onclick="exportData('json')">JSON (облегченный)</button>
-                <button class="dropdown-item" onclick="exportData('txt')">TXT формат</button>
+                <div class="dropdown-header">Сохранение данных</div>
+                <button class="dropdown-item" id="btn-save-local">
+                    <span class="material-symbols-rounded">save</span> Сохранить в LocalStorage
+                </button>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-toggle-item">
+                    <span>Автосохранение</span>
+                    <label class="switch">
+                        <input type="checkbox" id="auto-save-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-header">Экспорт файла</div>
+                <button class="dropdown-item" onclick="exportData('worldpack')">
+                    <span class="material-symbols-rounded">download</span> Core Node .worldpack
+                </button>
+                <button class="dropdown-item" onclick="exportData('json')">
+                    <span class="material-symbols-rounded">code</span> JSON (облегченный)
+                </button>
+                <button class="dropdown-item" onclick="exportData('txt')">
+                    <span class="material-symbols-rounded">description</span> TXT формат
+                </button>
             </div>
         </div>
     </header>
 
     <main class="grid-layout">
+        <!-- ЛЕВАЯ ПАНЕЛЬ -->
         <aside class="panel-left" id="panel-info">
             <div class="panel-header">
-                <span>Информация</span>
-                <button class="icon-btn" id="btn-dock-left" title="Скрыть панель">
-                    <span class="material-symbols-rounded">dock_to_left</span>
+                <span class="panel-header-title">Информация</span>
+                <button class="icon-btn" id="btn-dock-left" title="Свернуть/Развернуть панель">
+                    <span class="material-symbols-rounded" id="dock-left-icon">dock_to_left</span>
                 </button>
             </div>
             
             <div class="panel-content">
-                <div class="pin-image-zone" id="pin-zone">
-                    <span class="material-symbols-rounded">add</span>
-                    <span>Прикрепить Изображение (x1 max)</span>
-                    <input type="file" id="pin-upload" accept="image/*" hidden>
+                <div class="project-icon-upload-zone">
+                    <input type="file" id="project-icon-input" accept="image/*" style="display:none;">
+                    
+                    <div id="project-icon-preview-wrapper" class="icon-preview-wrapper hidden">
+                        <img id="project-icon-img" src="" alt="Иконка проекта">
+                        <button class="icon-btn dots-btn" id="btn-icon-menu">
+                            <span class="material-symbols-rounded">more_vert</span>
+                        </button>
+                        <div class="dropdown-menu icon-context-menu" id="icon-context-menu">
+                            <button class="dropdown-item" id="btn-change-icon">
+                                <span class="material-symbols-rounded">edit</span> Изменить
+                            </button>
+                            <button class="dropdown-item danger" id="btn-remove-icon">
+                                <span class="material-symbols-rounded">delete</span> Удалить
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class="action-btn outline" id="btn-add-project-icon" style="width: 100%;">
+                        <span class="material-symbols-rounded">add_photo_alternate</span>
+                        <span>Прикрепить Изображение</span>
+                    </button>
                 </div>
 
                 <div class="input-group">
-                    <label>Имя:</label>
-                    <input type="text" id="meta-name" value="Ламирк" placeholder="Введите имя...">
-                </div>
-                <div class="input-group">
-                    <label>Роль:</label>
-                    <input type="text" id="meta-author" value="Главный инженер" placeholder="Авторство...">
+                    <label>Имя проекта / Мета:</label>
+                    <input type="text" id="meta-name" value="" placeholder="Введите имя...">
                 </div>
 
                 <button class="action-btn" id="btn-import-pack">
-                    <span class="material-symbols-rounded">upload</span> Загрузить пак (json, txt, worldpack)
+                    <span class="material-symbols-rounded">upload</span> Загрузить пак
                 </button>
 
-                <div class="explorer-list" id="explorer">
-                    <div class="explorer-item world-item">
-                        <span class="material-symbols-rounded">language</span> World 1
-                        <div class="item-actions">
-                            <span class="material-symbols-rounded">edit</span>
-                            <span class="material-symbols-rounded" style="color: #ff5252;">close</span>
-                        </div>
-                    </div>
-                    <div class="explorer-item room-item">
-                        <span class="material-symbols-rounded">meeting_room</span> Room 1
-                        <div class="item-actions">
-                            <span class="material-symbols-rounded">settings</span>
-                            <span class="material-symbols-rounded" style="color: #ff5252;">close</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="explorer-list" id="explorer"></div>
             </div>
 
             <div class="panel-footer actions-row">
-                <button class="action-btn outline">New Room</button>
-                <button class="action-btn outline">New World</button>
+                <button class="action-btn outline" id="btn-create-room">+ New Room</button>
+                <button class="action-btn outline" id="btn-create-world">+ New World</button>
             </div>
         </aside>
 
-        <section class="panel-center" id="panel-coding">
+        <!-- ЦЕНТРАЛЬНАЯ ПАНЕЛЬ (КОДИНГ) -->
+        <section class="panel-center mobile-active" id="panel-coding">
             <div class="panel-header">
                 <span>Кодинг</span>
             </div>
@@ -107,81 +117,229 @@
 
             <div class="mobile-coding-tools">
                 <button class="toggle-btn" id="toggle-keyboard">
-                    <span class="material-symbols-rounded">keyboard</span> Использовать специальную клавиатуру
+                    <span class="material-symbols-rounded">keyboard</span> Клавиатура символов
                 </button>
                 <button class="toggle-btn" id="toggle-hints">
-                    <span class="material-symbols-rounded">lightbulb</span> Включить легкие подсказки в коде
+                    <span class="material-symbols-rounded">lightbulb</span> Включить подсказки
                 </button>
             </div>
             
             <div class="custom-keyboard" id="coding-keyboard"></div>
         </section>
 
+        <!-- ПРАВАЯ ПАНЕЛЬ (ИИ / ЗАМЕТКИ KEEPS) -->
         <aside class="panel-right" id="panel-oracle">
             <div class="panel-header">
-                <button class="icon-btn" id="btn-chat-menu" title="Чаты">
+                <button class="icon-btn" id="btn-chat-menu" title="Меню чатов Core Node">
                     <span class="material-symbols-rounded">menu</span>
                 </button>
                 
-                <div class="mode-toggle" id="mode-toggle" title="Переключить режим">
+                <div class="mode-toggle" id="mode-toggle" title="Переключить режим ИИ">
                     <span id="mode-label">Диалог</span>
                 </div>
 
                 <div class="right-actions">
-                    <button class="icon-btn" id="btn-toggle-notes" title="Описание, Заметки">
-                        <span class="material-symbols-rounded">docs</span>
+                    <button class="icon-btn" id="btn-toggle-notes" title="Переключиться на Заметки">
+                        <span class="material-symbols-rounded" id="notes-icon">sticky_note_2</span>
                     </button>
                 </div>
             </div>
 
-            <div class="oracle-chat-zone" id="chat-zone">
-                <div id="welcome-block" class="welcome-zone">
-                    <div class="blob-container">
-                        <div class="blob cyan-blob"></div>
-                        <div class="blob purple-blob"></div>
+            <!-- VIEW 1: ИИ ЧАТ -->
+            <div class="right-view-container active" id="view-ai">
+                <div class="oracle-chat-zone" id="chat-zone">
+                    <div id="welcome-block" class="welcome-zone">
+                        <div class="blob-container">
+                            <div class="blob cyan-blob"></div>
+                            <div class="blob purple-blob"></div>
+                        </div>
+                        <div class="oracle-greeting">Привет Ламирк!</div>
+                        <div class="oracle-warning">Диалоги могут не сохраняться, если вы не нажали на сохранить.</div>
                     </div>
-                    <div class="oracle-greeting">Привет Ламирк!</div>
-                    <div class="oracle-warning">Диалоги могут не сохраняться, если вы не нажали на сохранить.</div>
+                    
+                    <div id="chat-flow" class="chat-flow-box"></div>
                 </div>
-                
-                <div id="chat-flow" class="chat-flow-box"></div>
+
+                <div class="glass-input-box-wrapper">
+                    <div class="glass-input-box">
+                        <button type="button" class="icon-btn" id="btn-attach" title="Прикрепить файл">
+                            <span class="material-symbols-rounded">add</span>
+                        </button>
+                        <input type="file" id="attach-file-input" style="display: none;" multiple>
+
+                        <textarea id="oracle-input" placeholder="Ask..." rows="1"></textarea>
+
+                        <button type="button" class="icon-btn" id="voice-btn" title="Голосовой ввод">
+                            <span class="material-symbols-rounded">mic</span>
+                        </button>
+
+                        <button type="button" class="send-btn" id="send-btn" title="Отправить">
+                            <span class="material-symbols-rounded">send</span>
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <div class="glass-input-box">
-                <button class="icon-btn"><span class="material-symbols-rounded">add</span></button>
-                <textarea id="oracle-input" placeholder="Ask..." rows="1"></textarea>
-                <button class="icon-btn" id="voice-btn"><span class="material-symbols-rounded">mic</span></button>
-                <button class="send-btn" id="send-btn"><span class="material-symbols-rounded">send</span></button>
-            </div>
-
-            <div class="slide-notes-panel" id="notes-panel">
+            <!-- VIEW 2: ЗАМЕТКИ (KEEPS) -->
+            <div class="right-view-container" id="view-notes">
                 <div class="notes-toolbar">
-                    <button class="icon-btn" onclick="document.execCommand('bold')"><span class="material-symbols-rounded">format_bold</span></button>
-                    <button class="icon-btn" onclick="document.execCommand('italic')"><span class="material-symbols-rounded">format_italic</span></button>
-                    <button class="icon-btn" onclick="document.execCommand('underline')"><span class="material-symbols-rounded">format_underlined</span></button>
-                    <span style="flex-grow: 1;"></span>
-                    <button class="icon-btn" id="btn-close-notes" title="Скрыть">
-                        <span class="material-symbols-rounded">close</span>
-                    </button>
+                    <button class="icon-btn" onclick="document.execCommand('bold')" title="Жирный"><span class="material-symbols-rounded">format_bold</span></button>
+                    <button class="icon-btn" onclick="document.execCommand('italic')" title="Курсив"><span class="material-symbols-rounded">format_italic</span></button>
+                    <button class="icon-btn" onclick="document.execCommand('underline')" title="Подчеркнутый"><span class="material-symbols-rounded">format_underlined</span></button>
                 </div>
-                <div class="notes-editor" id="notes-editor" contenteditable="true" placeholder="Напишите свои мысли здесь..."></div>
+                <div class="notes-editor" id="notes-editor" contenteditable="true" placeholder="Напишите свои мысли и заметки Keeps здесь..."></div>
             </div>
         </aside>
     </main>
+
+    <!-- МОБИЛЬНОЕ МЕНЮ НАВИГАЦИИ (ВКЛАДКИ) -->
+    <nav class="mobile-nav-bar">
+        <div class="mobile-nav-item" data-target="panel-info">
+            <span class="material-symbols-rounded">info</span>
+            <span>Инфо</span>
+        </div>
+        <div class="mobile-nav-item active" data-target="panel-coding">
+            <span class="material-symbols-rounded">code</span>
+            <span>Кодинг</span>
+        </div>
+        <div class="mobile-nav-item" data-target="panel-oracle">
+            <span class="material-symbols-rounded">psychology</span>
+            <span>ИИ / Заметки</span>
+        </div>
+    </nav>
 </div>
 
-<!-- Модальное окно профилей и Штаба ЛМСХ -->
-<div class="migration-overlay" id="profileModal" style="display: none;">
-    <div class="migration-modal" style="max-width: 450px;">
-        <h3>👥 Штаб ЛМСХ и Профили</h3>
-        <p>Активные участники системы и окружение:</p>
-        <div style="text-align: left; margin: 15px 0; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
-            <div>🛠️ <b>Ламирк</b> — Главный инженер (Мужской)</div>
-            <div>🤖 <b>Мурзик</b> — Верная Помощница (Женский)</div>
-            <div>🎵 <b>Снежинка</b> — Женский вокал (Женский)</div>
-            <div>🎤 <b>Хахми</b> — Мужской вокал (Мужской)</div>
+<!-- TOAST -->
+<div class="toast-notification" id="toast-notification">
+    <span class="material-symbols-rounded" style="color: var(--primary);">check_circle</span>
+    <span>Сохранено в Данных</span>
+</div>
+
+<!-- БУРГЕР-МЕНЮ ЧАТОВ CORE NODE -->
+<div class="drawer-overlay" id="chatDrawerOverlay">
+    <div class="chat-drawer" id="chatDrawer">
+        <div class="drawer-header">
+            <div class="drawer-title">
+                <span class="material-symbols-rounded">hub</span> Core Node Чаты
+            </div>
+            <button class="icon-btn" id="btn-close-drawer"><span class="material-symbols-rounded">close</span></button>
         </div>
-        <button class="action-btn" id="btn-close-profile" style="width: 100%;">Закрыть</button>
+        <div class="drawer-body">
+            <a href="https://oracle-ai-pro.github.io/oracle" target="_blank" class="core-node-link-btn">
+                <span class="material-symbols-rounded">open_in_new</span> Открыть Core Node (Главный ИИ)
+            </a>
+            <div class="drawer-section-title">История диалогов Core Node</div>
+            <div class="chat-history-list" id="chatHistoryList">
+                <div class="chat-item active">
+                    <span class="material-symbols-rounded">chat_bubble</span>
+                    <span>Главный диалог Оракула</span>
+                </div>
+            </div>
+        </div>
+        <div class="drawer-footer">
+            <button class="action-btn outline" id="btn-sync-core-node" style="width: 100%;">
+                <span class="material-symbols-rounded">sync</span> Синхронизировать с Core Node
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- МОДАЛЬНЫЕ ОКНА -->
+<div class="migration-overlay" id="whatsNewModal" style="display: none;">
+    <div class="migration-modal whats-new-modal">
+        <div class="whats-new-header">
+            <span class="material-symbols-rounded whats-new-icon">new_releases</span>
+            <h3>Что нового в Oracle Notepad v2.6</h3>
+        </div>
+        <div class="whats-new-content">
+            <ul class="whats-new-list">
+                <li>
+                    <strong>Обновление Искуственного Интеллекта</strong>
+                    <span>Это основная Часть обновления <b>Oracle Notepad 2.6</b> чтобы Интеллект стал умнее и более персонализированее. Попробуйте.</span>
+                </li>
+                <li>
+                    <strong>Заметки теперь не вылазят на весь экран как раньше</strong>
+                    <span>Теперь если вы хотите написать заметку, просто переключите ИИ на Заметки, или наоборот</span>
+                </li>
+                <li>
+                    <strong>Автосохранение в Память Браузера</strong>
+                    <span>Теперь каждые 2 минуты или после каждой правки у вас будет Автоматически сохранятся "ИИ разговоры", "Заметки", "Коды", и Данные, этот тумблер можно отключить, правда не рекомендуем</span>
+                </li>
+                <li>
+                    <strong>Исправлены Баги</strong>
+                    <span>Баги были исправлены</span>
+                </li>
+            </ul>
+        </div>
+        <button class="action-btn" id="btn-close-whats-new" style="width: 100%; margin-top: 12px;">
+            <span class="material-symbols-rounded">check</span> Понятно
+        </button>
+    </div>
+</div>
+
+<div class="migration-overlay" id="projectsModal" style="display: none;">
+    <div class="migration-modal projects-modal-box">
+        <div class="modal-header-row">
+            <h3>📁 Управление проектами</h3>
+            <button class="icon-btn" id="btn-close-projects-modal" title="Закрыть">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div class="projects-list-container" id="projects-list"></div>
+        <button class="action-btn" id="btn-create-project" style="width: 100%; margin-top: 12px;">
+            <span class="material-symbols-rounded">add</span> Создать Новый проект
+        </button>
+    </div>
+</div>
+
+<div class="migration-overlay" id="roomModal" style="display: none;">
+    <div class="migration-modal" style="max-width: 420px;">
+        <h3 id="roomModalTitle">Комната</h3>
+        <div class="input-group" style="margin-top: 8px;">
+            <label>Выберите Мир, к которому принадлежит комната:</label>
+            <select id="roomWorldSelect"></select>
+        </div>
+        <div class="input-group">
+            <label>Имя комнаты (или оставьте пустым для "Room #"):</label>
+            <input type="text" id="roomNameInput" placeholder="Например: Главный Зал">
+        </div>
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
+            <button class="action-btn outline" id="btn-cancel-room" style="flex: 1;">Отмена</button>
+            <button class="action-btn" id="btn-confirm-room" style="flex: 1;">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<div class="migration-overlay" id="inputModal" style="display: none;">
+    <div class="migration-modal" style="max-width: 400px; text-align: left;">
+        <h3 id="inputModalTitle">Ввод</h3>
+        <div class="input-group" style="margin: 16px 0;">
+            <label id="inputModalLabel">Название:</label>
+            <input type="text" id="customInputValue" placeholder="Введите..." autocomplete="off">
+        </div>
+        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+            <button class="action-btn outline" id="btn-cancel-input" style="flex: 1;">Отмена</button>
+            <button class="action-btn" id="btn-confirm-input" style="flex: 1;">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<div class="migration-overlay" id="confirmModal" style="display: none;">
+    <div class="migration-modal" style="max-width: 400px; text-align: center;">
+        <h3 id="confirmModalTitle">Подтверждение</h3>
+        <p id="confirmModalMessage" style="margin: 16px 0; color: var(--on-surface-variant); font-size: 14px; line-height: 1.5;"></p>
+        <div style="display: flex; gap: 8px; justify-content: center;">
+            <button class="action-btn outline" id="btn-cancel-confirm" style="flex: 1;">Отмена</button>
+            <button class="action-btn" id="btn-accept-confirm" style="flex: 1; background: var(--accent-red);">Удалить</button>
+        </div>
+    </div>
+</div>
+
+<div class="migration-overlay" id="alertModal" style="display: none;">
+    <div class="migration-modal" style="max-width: 380px; text-align: center;">
+        <h3 id="alertModalTitle">Уведомление</h3>
+        <p id="alertModalMessage" style="margin: 16px 0; color: var(--on-surface-variant); font-size: 14px; line-height: 1.5;"></p>
+        <button class="action-btn" id="btn-close-alert" style="width: 100%;">Понятно</button>
     </div>
 </div>
 
@@ -193,32 +351,6 @@
     </filter>
   </defs>
 </svg>
-
-<div class="migration-overlay" id="migrationModal">
-    <div class="migration-modal">
-        <div class="migration-art">
-            <div class="node-box">
-                <div class="node-circle node-old">
-                    <span class="material-symbols-rounded">archive</span>
-                </div>
-                <span class="node-label">notepad-helper-2</span>
-            </div>
-
-            <div class="flow-stream" title="Перенос данных"></div>
-
-            <div class="node-box">
-                <div class="node-circle node-new">
-                    <span class="material-symbols-rounded">bolt</span>
-                </div>
-                <span class="node-label">oracle-notepad</span>
-            </div>
-        </div>
-        <p>Архитектура проекта успешно мигрировала из устаревшего репозитория.</p>
-        <button class="action-btn" id="btn-try-migration" style="width: 100%;">
-            <span class="material-symbols-rounded">rocket_launch</span> Попробовать систему
-        </button>
-    </div>
-</div>
 
 <script src="script.js"></script>
 </body>
